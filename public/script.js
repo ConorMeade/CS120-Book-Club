@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
   // Event listener for showing the registration form
   document.getElementById('show-register').addEventListener('click', () => {
@@ -19,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const success = await loginUser(email, password);
     if (success) {
-      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/main_page.html'; // REPLACE LATER with a new URL
+      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/main_page.html';
     } else {
       alert('Invalid email or password.');
     }
