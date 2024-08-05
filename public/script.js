@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const success = await loginUser(email, password);
     if (success) {
-      window.location.href = 'https://ConorMeade.github.io/CS120-Book-Club/add_to_library.html'; // REPLACE LATER with a new URL
+      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/main_page.html'; // REPLACE LATER with a new URL
     } else {
       alert('Invalid email or password.');
     }
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const success = await registerUser(name, username, password, email);
     if (success) {
       alert('Registration successful!');
-      window.location.href = 'https://ConorMeade.github.io/CS120-Book-Club/add_to_library.html'; // REPLACE LATER with a new URL
+      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/main_page.html'; // REPLACE LATER with a new URL
     } else {
       alert('Registration failed.');
     }
