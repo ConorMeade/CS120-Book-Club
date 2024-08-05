@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify({ username: email, password })
       });
+      console.log('here')
       const result = await response.json();
       console.log(result)
       if (result.status === 'success') {
