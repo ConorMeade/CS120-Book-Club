@@ -30,5 +30,6 @@ if (isset($data['user_id']) &&isset($data['title']) && isset($data['author']) &&
 } else {
     echo json_encode(["status" => "error", "message" => "Missing required fields. "]);
 }
-
+header('Location: main_page.html');
+exit();
 ?>
