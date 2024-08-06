@@ -18,19 +18,12 @@
         function searchBook() {
             const title = document.getElementById('searchTitle').value;
             if (!title) return;
-
             console.log('Searching for:', title);
-
             fetch(`https://openlibrary.org/search.json?title=${title}`)
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Data received:', data);
-
                     if (data.docs.length > 0) {
-                        searchResults = data.docs;
+                        searchResults = data.docs; // This is the point where searchResults is used
                         const bookSelect = document.getElementById('bookSelect');
                         bookSelect.innerHTML = '<option value="">Select a book</option>';
                         data.docs.forEach((book, index) => {
