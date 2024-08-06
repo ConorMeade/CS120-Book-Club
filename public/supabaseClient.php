@@ -2,6 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+ini_set('display_errors', 1);
 // require(__DIR__.'/../vendor/autoload.php');
 require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 
