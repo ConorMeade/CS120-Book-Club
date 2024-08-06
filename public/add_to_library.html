@@ -140,7 +140,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
 
     function redirectToMainPage() {
         console.log("Redirecting to main page");
-        redirectToMainPage();
+        window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
 }
     function populateBookDetails() {
         const selectedIndex = document.getElementById('bookSelect').value;
@@ -203,7 +203,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
 
             if (result.status === 'success') {
                 alert('Book added successfully!');
-                window.location.href = 'main_page.html';
+                redirectToMainPage();
             } else {
                 alert('Failed to add book: ' + result.message);
             }
