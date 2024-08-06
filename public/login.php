@@ -8,7 +8,13 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 require 'supabaseClient.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
-echo json_encode($data);
+
+// Check if the required data is present
+if (!isset($data['username']) || !isset($data['password'])) {
+    echo json_encode(["status" => "error", "message" => "Username or password is missing"]);
+    exit;
+}
+
 $email = $data['username'];
 $password = $data['password'];
 

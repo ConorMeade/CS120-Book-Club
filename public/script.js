@@ -47,24 +47,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Function to handle user login
-  async function loginUser(email, password) {
-    // http://localhost/BookClub/login.php
-    console.log(email)
-    console.log(password)
-    try {
-      const response = await fetch('https://infinite-beyond-05850-58f77000e905.herokuapp.com/login.php', {  // THIS NEEDS to be changed from localhost
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.encode({ email, password })
-      });
+async function loginUser(email, password) {
+  try {
+    console.log('Starting login process'); // Initial log
+    const response = await fetch('https://infinite-beyond-05850-58f77000e905.herokuapp.com/login.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username: email, password })
+    });
 
-      // console.log(response)
-      // console.log(response.json())
-      console.log('here')
-      const result = await response.json();
-      console.log(result)
+    const text = await response.text(); // Get the raw response text
+    console.log('Raw response:', text); // Log the raw response to the console
+
+    // Try to parse the raw response as JSON
+    try {
+      const result = JSON.parse(text);
+      console.log('Parsed JSON:', result);
       if (result.status === 'success') {
         return true;
       } else {
@@ -72,10 +72,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
       }
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error('Error parsing JSON:', error, 'Raw response:', text);
       return false;
     }
+  } catch (error) {
+    console.error('Error logging in:', error);
+    return false;
   }
+}
+
 
   // Function to handle user registration
   async function registerUser(name, username, password, email) {
