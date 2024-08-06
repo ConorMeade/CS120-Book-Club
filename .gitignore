@@ -2,3 +2,4 @@
 .env
 setupPHP.txt
 /vendor
+/public/vendor

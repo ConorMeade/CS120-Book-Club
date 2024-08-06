@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Book</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <!-- <link rel="stylesheet" href="../static/css/styles.css"> -->
+    <link rel="stylesheet" href="./static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 </head>
@@ -88,8 +89,9 @@
     <button onclick="closeModal()">Go Back</button>
 </div>
 
-<script>
 
+<script>
+    
     const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);

@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const success = await loginUser(email, password);
     if (success) {
       window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
-      // 'https://ConorMeade.github.io/CS120-Book-Club/add_to_library.html'; // REPLACE LATER with a new URL
     } else {
       alert('Invalid email or password.');
     }
