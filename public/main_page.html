@@ -31,20 +31,21 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function fetchBooks() {
-    const { data: { user_id }, error: userError } = await supabase.auth.getUser();
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (userError || !user_id) {
+    if (userError || !user) {
         alert('You must be logged in to view your library.');
         window.location.href = 'index.html'; // Redirect to login page if not logged in
         return;
     }
 
-    console.log('Fetching books for user:', user_id.id);
+    const user_id = user.id;
+    console.log('Fetching books for user:', user_id);
 
     const { data: books, error: booksError } = await supabase
         .from('user_books')
         .select('*')
-        .eq('user_id', user_id.id);
+        .eq('user_id', user_id);
 
     if (booksError) {
         console.error('Error fetching books:', booksError.message);
