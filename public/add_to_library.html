@@ -186,7 +186,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         if (!duplicateCheck) {
             checkDuplicate();
         } else {
-            addToLibrary(20);
+            addToLibrary();
         }
     });
 
@@ -206,7 +206,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
             if (data.exists) {
                 document.getElementById('duplicateModal').style.display = 'block';
             } else {
-                addToLibrary(20);
+                addToLibrary();
                 // submitForm();
             }
         })
@@ -216,7 +216,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
     function continueAdding() {
         duplicateCheck = true;
         document.getElementById('duplicateModal').style.display = 'none';
-        addToLibrary(20);
+        addToLibrary();
         // submitForm();
     }
 
@@ -275,6 +275,6 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         }
     });
 </script>
-<script src="AddToLibrary.js" type="text/javascript"></script>
+<script src="addToLibrary.js" type="text/javascript"></script>
 </body>
 </html>
