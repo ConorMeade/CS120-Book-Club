@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const success = await loginUser(email, password);
     if (success) {
-      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/main_page.html';
+      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
     } else {
       alert('Invalid email or password.');
     }
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const success = await registerUser(name, username, password, email);
     if (success) {
       alert('Registration successful!');
-      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/main_page.html'; // REPLACE LATER with a new URL
+      window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html'; // REPLACE LATER with a new URL
     } else {
       alert('Registration failed.');
     }
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(email)
     console.log(password)
     try {
-      const response = await fetch('https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/login.php', {  // THIS NEEDS to be changed from localhost
+      const response = await fetch('https://infinite-beyond-05850-58f77000e905.herokuapp.com/login.php', {  // THIS NEEDS to be changed from localhost
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // http://localhost/BookClub/register.php
     try {
-      const response = await fetch('https://infinite-beyond-05850-58f77000e905.herokuapp.com/public/register.php', {  // THIS NEEDS to be changed from localhost
+      const response = await fetch('https://infinite-beyond-05850-58f77000e905.herokuapp.com/register.php', {  // THIS NEEDS to be changed from localhost
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
