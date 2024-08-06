@@ -251,6 +251,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
                 console.log('Book added successfully!', data);
                 alert('Book added successfully!');
                 clearForm();
+                window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
             }
         } catch (error) {
             console.error('Error adding book:', error.message);
