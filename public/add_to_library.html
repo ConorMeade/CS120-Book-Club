@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Book</title>
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
 </head>
 <body>
 
@@ -81,7 +80,7 @@
     </form>
 </div>
 
-<!-- This is the box that will pop up if the user is trying to add a book to the library when it already exists -->
+<!-- Duplicate Modal -->
 <div id="duplicateModal" style="display:none;">
     <p>This book is already in your library, are you sure you want to continue adding?</p>
     <button onclick="continueAdding()">Continue Adding</button>
@@ -89,25 +88,25 @@
 </div>
 
 <script>
-
+    // Supabase client initialization
     const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
+    const supabaseKey = '<key>';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
     let searchResults = [];
     let duplicateCheck = false;
 
-function searchBook() {
-    const title = document.getElementById('searchTitle').value;
-    if (!title) return;
+    // Function to search for books
+    async function searchBook() {
+        const title = document.getElementById('searchTitle').value;
+        if (!title) return;
 
-    console.log('Searching for:', title);
+        console.log('Searching for:', title);
 
-    fetch(`https://openlibrary.org/search.json?title=${title}`)
-        .then(response => {
+        try {
+            const response = await fetch(`https://openlibrary.org/search.json?title=${title}`);
             console.log('Response status:', response.status);
-            return response.json();
-        })
-        .then(data => {
+
+            const data = await response.json();
             console.log('Data received:', data);
 
             if (data.docs.length > 0) {
@@ -127,18 +126,12 @@ function searchBook() {
                 document.getElementById('searchResults').style.display = 'none';
                 document.getElementById('bookDetails').style.display = 'none';
             }
-        })
-        .catch(error => console.error('Error:', error));
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
-document.getElementById('searchTitle').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        searchBook();
-    }
-});
-
-
+    // Function to populate book details
     function populateBookDetails() {
         const selectedIndex = document.getElementById('bookSelect').value;
         if (selectedIndex === "") {
@@ -163,6 +156,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         document.getElementById('bookDetails').style.display = 'block';
     }
 
+    // Function to clear book details
     function clearBookDetails() {
         document.getElementById('title').value = '';
         document.getElementById('author').value = '';
@@ -172,6 +166,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         document.getElementById('coverImage').style.display = 'none';
     }
 
+    // Function to toggle rating visibility
     function toggleRating() {
         const status = document.getElementById('status').value;
         if (status === 'completed') {
@@ -181,6 +176,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         }
     }
 
+    // Form submission event listener
     document.getElementById('bookForm').addEventListener('submit', function(event) {
         event.preventDefault();
         if (!duplicateCheck) {
@@ -190,43 +186,50 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         }
     });
 
-    function checkDuplicate() {
+    // Function to check for duplicate books
+    async function checkDuplicate() {
         const title = document.getElementById('title').value;
         const author = document.getElementById('author').value;
 
-        fetch('dupe_check.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}`,
-        })
-        .then(response => response.json())
-        .then(data => {
+        try {
+            const response = await fetch('dupe_check.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}`,
+            });
+
+            const data = await response.json();
             if (data.exists) {
                 document.getElementById('duplicateModal').style.display = 'block';
             } else {
                 submitForm();
             }
-        })
-        .catch(error => console.error('Error:', error));
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
+    // Function to continue adding book
     function continueAdding() {
         duplicateCheck = true;
         document.getElementById('duplicateModal').style.display = 'none';
         submitForm();
     }
 
+    // Function to close modal
     function closeModal() {
         document.getElementById('duplicateModal').style.display = 'none';
     }
 
+    // Function to submit the form
     async function submitForm() {
         if (!supabase.auth.user()) {
             alert('You must be logged in to add books to your library.');
             return;
         }
+
         const formData = new FormData(document.getElementById('bookForm'));
         const title = formData.get('title');
         const author = formData.get('author');
@@ -256,6 +259,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         }
     }
 
+    // Function to clear the form after submission
     function clearForm() {
         document.getElementById('searchTitle').value = '';
         document.getElementById('searchResults').style.display = 'none';
@@ -266,6 +270,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         duplicateCheck = false; // reset dupe check
     }
 
+    // Event listener for Enter key in search input
     document.getElementById('searchTitle').addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();
