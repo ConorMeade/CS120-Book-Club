@@ -26,6 +26,7 @@
             console.log('Response status:', response.status);
 
             const data = await response.json();
+            data.docs = undefined;
             console.log('Data received:', data);
 
             if (data.docs.length > 0) {
