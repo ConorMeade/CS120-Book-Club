@@ -138,7 +138,10 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
     }
 });
 
-
+    function redirectToMainPage() {
+        console.log("Redirecting to main page");
+        redirectToMainPage();
+}
     function populateBookDetails() {
         const selectedIndex = document.getElementById('bookSelect').value;
         if (selectedIndex === "") {
@@ -187,7 +190,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
             checkDuplicate();
         } else {
             addToLibrary(20);
-            window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
+            redirectToMainPage();
         }
     });
 
@@ -208,7 +211,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
                 document.getElementById('duplicateModal').style.display = 'block';
             } else {
                 addToLibrary(20);
-                window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
+                redirectToMainPage();
                 // submitForm();
             }
         })
@@ -219,7 +222,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         duplicateCheck = true;
         document.getElementById('duplicateModal').style.display = 'none';
         addToLibrary(20);
-        window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
+        redirectToMainPage();
         // submitForm();
     }
 
@@ -254,7 +257,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
                 console.log('Book added successfully!', data);
                 alert('Book added successfully!');
                 clearForm();
-                window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
+                redirectToMainPage();
             }
         } catch (error) {
             console.error('Error adding book:', error.message);
