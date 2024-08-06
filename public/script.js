@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
-    console.log(email, password)
-
     const success = await loginUser(email, password);
     if (success) {
       window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
