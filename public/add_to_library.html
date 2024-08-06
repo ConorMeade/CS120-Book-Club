@@ -188,7 +188,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         if (!duplicateCheck) {
             checkDuplicate();
         } else {
-            addToLibrary();
+            addToLibrary(20);
         }
     });
 
@@ -208,7 +208,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
             if (data.exists) {
                 document.getElementById('duplicateModal').style.display = 'block';
             } else {
-                addToLibrary();
+                addToLibrary(20);
                 // submitForm();
             }
         })
@@ -218,7 +218,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
     function continueAdding() {
         duplicateCheck = true;
         document.getElementById('duplicateModal').style.display = 'none';
-        addToLibrary();
+        addToLibrary(20);
         // submitForm();
     }
 

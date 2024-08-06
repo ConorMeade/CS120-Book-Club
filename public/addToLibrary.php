@@ -18,6 +18,8 @@ if (isset($data['user_id']) &&isset($data['title']) && isset($data['author']) &&
     $summary = $data['summary'];
     $status = $data['status'];
     $rating = $data['rating'];
+
+    
     $result = supabase_add_to_library($user, $title, $author, $cover, $pages, $summary, $status, $rating);
 
     if ($result['status'] === 'success') {

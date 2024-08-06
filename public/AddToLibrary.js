@@ -1,4 +1,4 @@
-async function addToLibrary(username) {
+async function addToLibrary(user_id) {
     // old submitform() function
 
     // const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
@@ -18,7 +18,7 @@ async function addToLibrary(username) {
         const summary = formData.get('summary');
         const status = formData.get('status');
         const rating = formData.get('rating') || null;
-        const user_id = 6;
+        // const user_id = 6;
 
 
         console.log('Starting add to library process'); // Initial log
