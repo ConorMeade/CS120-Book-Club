@@ -16,7 +16,7 @@
         <span class="logo-text">PAGEPAL</span>
     </div>
     <h1>Add a Book</h1>
-    <form id="bookForm" method="POST">
+    <form id="bookForm" action="add_book.php" method="POST">
         <div>
             <label for="searchTitle">Book Title:</label>
             <input type="text" id="searchTitle" name="searchTitle" required>
@@ -93,9 +93,7 @@
     let searchResults = [];
     let duplicateCheck = true; // TEMP FIX, dupe check not working right now
 
-    const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
 
     // Search book function (unchanged)
     function searchBook() {
