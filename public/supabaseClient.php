@@ -3,8 +3,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 ini_set('display_errors', 1);
-// require(__DIR__.'/../vendor/autoload.php');
-require '../vendor/autoload.php';
+require(__DIR__.'/../vendor/autoload.php');
+// require '../vendor/autoload.php';
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
