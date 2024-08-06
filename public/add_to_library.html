@@ -6,11 +6,91 @@
     <title>Add a Book</title>
     <link rel="stylesheet" href="./static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <div class="logo-container">
+            <img src="images/books_icon.png" alt="Logo" class="logo">
+            <span class="logo-text">PAGEPAL</span>
+        </div>
+        <h1>Add a Book</h1>
+        <form id="bookForm" method="POST">
+            <div>
+                <label for="searchTitle">Book Title:</label>
+                <input type="text" id="searchTitle" name="searchTitle" required>
+                <button type="button" onclick="searchBook()">Search</button>
+            </div>
+            <div id="searchResults" style="display:none;">
+                <label for="bookSelect">Select a Book:</label>
+                <select id="bookSelect" onchange="populateBookDetails()">
+                    <option value="">Select a book</option>
+                </select>
+            </div>
+            <div id="bookDetails" style="display:none;">
+                <div>
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" readonly>
+                </div>
+                <div>
+                    <label for="author">Author:</label>
+                    <input type="text" id="author" name="author" readonly>
+                </div>
+                <div>
+                    <label for="cover">Cover:</label>
+                    <input type="hidden" id="cover" name="cover">
+                    <img id="coverImage" alt="Book Cover" style="display: block; max-width: 100px;">
+                </div>
+                <div>
+                    <label for="pages">Pages:</label>
+                    <input type="text" id="pages" name="pages" readonly>
+                </div>
+                <div>
+                    <label for="summary">Summary:</label>
+                    <textarea id="summary" name="summary" rows="4" readonly></textarea>
+                </div>
+                <div>
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required onchange="toggleRating()">
+                        <option value="want-to-read">Want to Read</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div id="ratingDiv" style="display:none;">
+                    <label for="rating">Rating:</label>
+                    <select id="rating" name="rating">
+                        <option value="0">0</option>
+                        <option value="0.5">0.5</option>
+                        <option value="1">1</option>
+                        <option value="1.5">1.5</option>
+                        <option value="2">2</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3">3</option>
+                        <option value="3.5">3.5</option>
+                        <option value="4">4</option>
+                        <option value="4.5">4.5</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="Add Book">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- This is the box that will pop up if the user is trying to add a book to the library when it already exists -->
+    <div id="duplicateModal" style="display:none;">
+        <p>This book is already in your library, are you sure you want to continue adding?</p>
+        <button onclick="continueAdding()">Continue Adding</button>
+        <button onclick="closeModal()">Go Back</button>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Initialize Supabase client
             const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
+            const supabaseKey = 'YOUR_SUPABASE_KEY';
             const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
             // Declare the searchResults array before using it
@@ -92,7 +172,7 @@
                 }
             }
 
-            document.getElementById('bookForm').addEventListener('submit', function (event) {
+            document.getElementById('bookForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 submitForm();
             });
@@ -153,84 +233,5 @@
             }
         });
     </script>
-</head>
-<body>
-    <div class="form-container">
-        <div class="logo-container">
-            <img src="images/books_icon.png" alt="Logo" class="logo">
-            <span class="logo-text">PAGEPAL</span>
-        </div>
-        <h1>Add a Book</h1>
-        <form id="bookForm" method="POST">
-            <div>
-                <label for="searchTitle">Book Title:</label>
-                <input type="text" id="searchTitle" name="searchTitle" required>
-                <button type="button" onclick="searchBook()">Search</button>
-            </div>
-            <div id="searchResults" style="display:none;">
-                <label for="bookSelect">Select a Book:</label>
-                <select id="bookSelect" onchange="populateBookDetails()">
-                    <option value="">Select a book</option>
-                </select>
-            </div>
-            <div id="bookDetails" style="display:none;">
-                <div>
-                    <label for="title">Title:</label>
-                    <input type="text" id="title" name="title" readonly>
-                </div>
-                <div>
-                    <label for="author">Author:</label>
-                    <input type="text" id="author" name="author" readonly>
-                </div>
-                <div>
-                    <label for="cover">Cover:</label>
-                    <input type="hidden" id="cover" name="cover">
-                    <img id="coverImage" alt="Book Cover" style="display: block; max-width: 100px;">
-                </div>
-                <div>
-                    <label for="pages">Pages:</label>
-                    <input type="text" id="pages" name="pages" readonly>
-                </div>
-                <div>
-                    <label for="summary">Summary:</label>
-                    <textarea id="summary" name="summary" rows="4" readonly></textarea>
-                </div>
-                <div>
-                    <label for="status">Status:</label>
-                    <select id="status" name="status" required onchange="toggleRating()">
-                        <option value="want-to-read">Want to Read</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                </div>
-                <div id="ratingDiv" style="display:none;">
-                    <label for="rating">Rating:</label>
-                    <select id="rating" name="rating">
-                        <option value="0">0</option>
-                        <option value="0.5">0.5</option>
-                        <option value="1">1</option>
-                        <option value="1.5">1.5</option>
-                        <option value="2">2</option>
-                        <option value="2.5">2.5</option>
-                        <option value="3">3</option>
-                        <option value="3.5">3.5</option>
-                        <option value="4">4</option>
-                        <option value="4.5">4.5</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div>
-                    <input type="submit" value="Add Book">
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!-- This is the box that will pop up if the user is trying to add a book to the library when it already exists -->
-    <div id="duplicateModal" style="display:none;">
-        <p>This book is already in your library, are you sure you want to continue adding?</p>
-        <button onclick="continueAdding()">Continue Adding</button>
-        <button onclick="closeModal()">Go Back</button>
-    </div>
 </body>
 </html>
