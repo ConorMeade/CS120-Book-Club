@@ -31,9 +31,17 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function fetchBooks() {
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const { data: user, error: userError } = await supabase.auth.getUser();
 
-    if (userError || !user) {
+    if (userError) {
+        console.error('Error fetching user:', userError.message);
+        alert('Error fetching user information. Please log in again.');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    if (!user || !user.id) {
+        console.error('User is not logged in');
         alert('You must be logged in to view your library.');
         window.location.href = 'index.html'; // Redirect to login page if not logged in
         return;
