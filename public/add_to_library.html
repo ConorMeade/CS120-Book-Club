@@ -18,11 +18,11 @@
             <div>
                 <label for="searchTitle">Book Title:</label>
                 <input type="text" id="searchTitle" name="searchTitle" required>
-                <button type="button" onclick="searchBook()">Search</button>
+                <button type="button" id="searchButton">Search</button>
             </div>
             <div id="searchResults" style="display:none;">
                 <label for="bookSelect">Select a Book:</label>
-                <select id="bookSelect" onchange="populateBookDetails()">
+                <select id="bookSelect">
                     <option value="">Select a book</option>
                 </select>
             </div>
@@ -50,7 +50,7 @@
                 </div>
                 <div>
                     <label for="status">Status:</label>
-                    <select id="status" name="status" required onchange="toggleRating()">
+                    <select id="status" name="status" required>
                         <option value="want-to-read">Want to Read</option>
                         <option value="in-progress">In Progress</option>
                         <option value="completed">Completed</option>
@@ -82,8 +82,8 @@
     <!-- This is the box that will pop up if the user is trying to add a book to the library when it already exists -->
     <div id="duplicateModal" style="display:none;">
         <p>This book is already in your library, are you sure you want to continue adding?</p>
-        <button onclick="continueAdding()">Continue Adding</button>
-        <button onclick="closeModal()">Go Back</button>
+        <button id="continueButton">Continue Adding</button>
+        <button id="closeModalButton">Go Back</button>
     </div>
 
     <script>
@@ -93,7 +93,6 @@
             const supabaseKey = 'YOUR_SUPABASE_KEY';
             const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-            // Declare the searchResults array before using it
             let searchResults = [];
 
             async function searchBook() {
@@ -172,11 +171,6 @@
                 }
             }
 
-            document.getElementById('bookForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                submitForm();
-            });
-
             async function submitForm() {
                 const user = supabase.auth.user();
                 if (!user) {
@@ -231,6 +225,15 @@
             function closeModal() {
                 document.getElementById('duplicateModal').style.display = 'none';
             }
+
+            // Attach event listeners after functions are defined
+            document.getElementById('searchButton').addEventListener('click', searchBook);
+            document.getElementById('bookForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                submitForm();
+            });
+            document.getElementById('continueButton').addEventListener('click', continueAdding);
+            document.getElementById('closeModalButton').addEventListener('click', closeModal);
         });
     </script>
 </body>
