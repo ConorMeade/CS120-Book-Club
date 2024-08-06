@@ -117,7 +117,7 @@ function searchBook() {
                 data.docs.forEach((book, index) => {
                     const option = document.createElement('option');
                     option.value = index;
-                    option.text = ${book.title} by ${book.author_name ? book.author_name.join(', ') : 'Unknown'} (${book.first_publish_year || 'Unknown'});
+                    option.text = `${book.title} by ${book.author_name ? book.author_name.join(', ') : 'Unknown'} (${book.first_publish_year || 'Unknown'})`;
                     bookSelect.appendChild(option);
                 });
                 document.getElementById('searchResults').style.display = 'block';
