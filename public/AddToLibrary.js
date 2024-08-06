@@ -10,10 +10,10 @@ async function addToLibrary() {
     try {
         const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const supabase = await supabase.createClient(supabaseUrl, supabaseKey);
 
 
-        const user_id = supabase.auth.user().id;
+        const user_id = await supabase.auth.user().id;
         const formData = new FormData(document.getElementById('bookForm'));
         const title = formData.get('title');
         const author = formData.get('author');
