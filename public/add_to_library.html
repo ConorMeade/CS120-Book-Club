@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add a Book</title>
-    <!-- <link rel="stylesheet" href="../static/css/styles.css"> -->
     <link rel="stylesheet" href="./static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
@@ -16,7 +15,7 @@
         <span class="logo-text">PAGEPAL</span>
     </div>
     <h1>Add a Book</h1>
-    <form id="bookForm"  method="POST">
+    <form id="bookForm" method="POST">
         <div>
             <label for="searchTitle">Book Title:</label>
             <input type="text" id="searchTitle" name="searchTitle" required>
@@ -81,34 +80,26 @@
     </form>
 </div>
 
-<!-- This is the box that will pop up if the user is trying to add a book to the library when it already exists -->
 <div id="duplicateModal" style="display:none;">
     <p>This book is already in your library, are you sure you want to continue adding?</p>
     <button onclick="continueAdding()">Continue Adding</button>
     <button onclick="closeModal()">Go Back</button>
 </div>
 
-
 <script>
-    let searchResults = [];
-    let duplicateCheck = true; // TEMP FIX, dupe check not working right now
-
     const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Search book function (unchanged)
+    let searchResults = [];
+    let duplicateCheck = true;
+
     function searchBook() {
         const title = document.getElementById('searchTitle').value;
         if (!title) return;
-        console.log('Searching for:', title);
         fetch(`https://openlibrary.org/search.json?title=${title}`)
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                console.log('Data received:', data);
                 if (data.docs.length > 0) {
                     searchResults = data.docs;
                     const bookSelect = document.getElementById('bookSelect');
@@ -244,7 +235,6 @@
                 console.log('Book added successfully!', data);
                 alert('Book added successfully!');
                 clearForm();
-                console.log('Redirecting to main_page.html');
                 window.location.href = 'main_page.html'; // Redirect after successful submission
             }
         } catch (error) {
@@ -264,6 +254,5 @@
     }
 
 </script>
-<script src="AddToLibrary.js" type="text/javascript"></script>
 </body>
 </html>
