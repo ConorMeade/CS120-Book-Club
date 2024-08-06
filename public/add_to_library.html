@@ -93,8 +93,6 @@
     let searchResults = [];
     let duplicateCheck = true; // TEMP FIX, dupe check not working right now
 
-
-
     // Search book function (unchanged)
     function searchBook() {
         const title = document.getElementById('searchTitle').value;
@@ -242,7 +240,6 @@
                 console.log('Book added successfully!', data);
                 alert('Book added successfully!');
                 clearForm();
-                console.log('Redirecting to main_page.html');
                 window.location.href = 'main_page.html'; // Redirect after successful submission
             }
         } catch (error) {
