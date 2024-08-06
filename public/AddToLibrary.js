@@ -8,12 +8,12 @@ async function addToLibrary() {
     // }
     
     try {
-        const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
-        const supabase = await supabase.createClient(supabaseUrl, supabaseKey);
+        // const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
+        // const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
+        // const supabase = await supabase.createClient(supabaseUrl, supabaseKey);
 
 
-        const user_id = await supabase.auth.user().id;
+        // const user_id = await supabase.auth.user().id;
         const formData = new FormData(document.getElementById('bookForm'));
         const title = formData.get('title');
         const author = formData.get('author');
@@ -22,7 +22,7 @@ async function addToLibrary() {
         const summary = formData.get('summary');
         const status = formData.get('status');
         const rating = formData.get('rating') || null;
-        // const user_id = 6;
+        const user_id = 6;
 
 
         console.log('Starting add to library process'); // Initial log
