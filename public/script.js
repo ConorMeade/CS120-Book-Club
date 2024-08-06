@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ email, password })
       });
 
-      console.log(response)
-      console.log(response.json())
+      // console.log(response)
+      // console.log(response.json())
       console.log('here')
       const result = await response.json();
       console.log(result)

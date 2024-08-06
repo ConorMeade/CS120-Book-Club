@@ -7,6 +7,7 @@ ini_set('display_errors', 1);
 require 'supabaseClient.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
+echo $data;
 $email = $data['username'];
 $password = $data['password'];
 
