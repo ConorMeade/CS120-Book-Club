@@ -23,7 +23,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.docs.length > 0) {
-                        searchResults = data.docs;
+                        searchResults = data.docs; // This is the point where searchResults is used
                         const bookSelect = document.getElementById('bookSelect');
                         bookSelect.innerHTML = '<option value="">Select a book</option>';
                         data.docs.forEach((book, index) => {
