@@ -17,6 +17,10 @@
     </div>
     <h1>Add a Book</h1>
     <form id="bookForm" action="add_book.php" method="POST">
+        <!-- <div>
+            <label for="searchTitle">User's Email</label>
+            <input type="text" id="user-email" name="user-email" required>
+        </div> -->
         <div>
             <label for="searchTitle">Book Title:</label>
             <input type="text" id="searchTitle" name="searchTitle" required>
@@ -186,7 +190,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
         if (!duplicateCheck) {
             checkDuplicate();
         } else {
-            addToLibrary(20);
+            addToLibrary();
         }
     });
 
@@ -206,7 +210,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
             if (data.exists) {
                 document.getElementById('duplicateModal').style.display = 'block';
             } else {
-                addToLibrary(20);
+                addToLibrary();
                 // submitForm();
             }
         })
@@ -216,7 +220,7 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
     function continueAdding() {
         duplicateCheck = true;
         document.getElementById('duplicateModal').style.display = 'none';
-        addToLibrary(20);
+        addToLibrary();
         // submitForm();
     }
 
