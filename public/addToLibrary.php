@@ -9,8 +9,7 @@ require 'supabaseClient.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-if (isset($data['user_id']) &&isset($data['title']) && isset($data['author']) && isset($data['cover']) && isset($data['pages']) && isset($data['summary']) && isset($data['status']) && isset($data['rating'])) {
-    $user = $data['user_id'];
+if (isset($data['title']) && isset($data['author']) && isset($data['cover']) && isset($data['pages']) && isset($data['summary']) && isset($data['status']) && isset($data['rating'])) {
     $title = $data['title'];
     $author = $data['author'];
     $cover = $data['cover'];
@@ -18,6 +17,12 @@ if (isset($data['user_id']) &&isset($data['title']) && isset($data['author']) &&
     $summary = $data['summary'];
     $status = $data['status'];
     $rating = $data['rating'];
+
+    if (isset($data['user_id'])){
+      $user = $data['user_id'];
+    } else {
+      $user = 20;
+    }
 
     
     $result = supabase_add_to_library($user, $title, $author, $cover, $pages, $summary, $status, $rating);

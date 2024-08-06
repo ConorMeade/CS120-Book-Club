@@ -18,6 +18,9 @@ async function addToLibrary(user_id) {
         const summary = formData.get('summary');
         const status = formData.get('status');
         const rating = formData.get('rating') || null;
+        if(user_id === undefined){
+            const user_id = 20;
+        }
         // const user_id = 6;
 
 
