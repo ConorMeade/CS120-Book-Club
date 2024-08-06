@@ -91,47 +91,53 @@
 
 <script>
     let searchResults = [];
-    let duplicateCheck = true; // TEMP FIX, dupe check not working right now
+    // let duplicateCheck = false;
 
-    // Search book function (unchanged)
-    function searchBook() {
-        const title = document.getElementById('searchTitle').value;
-        if (!title) return;
-        console.log('Searching for:', title);
-        fetch(`https://openlibrary.org/search.json?title=${title}`)
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Data received:', data);
-                if (data.docs.length > 0) {
-                    searchResults = data.docs;
-                    const bookSelect = document.getElementById('bookSelect');
-                    bookSelect.innerHTML = '<option value="">Select a book</option>';
-                    data.docs.forEach((book, index) => {
-                        const option = document.createElement('option');
-                        option.value = index;
-                        option.text = `${book.title} by ${book.author_name ? book.author_name.join(', ') : 'Unknown'} (${book.first_publish_year || 'Unknown'})`;
-                        bookSelect.appendChild(option);
-                    });
-                    document.getElementById('searchResults').style.display = 'block';
-                    document.getElementById('bookDetails').style.display = 'none';
-                } else {
-                    alert('No books found.');
-                    document.getElementById('searchResults').style.display = 'none';
-                    document.getElementById('bookDetails').style.display = 'none';
-                }
-            })
-            .catch(error => console.error('Error:', error));
+    // NOTE: TEMP FIX, dupe check not working right now
+    let duplicateCheck = true;
+
+function searchBook() {
+    const title = document.getElementById('searchTitle').value;
+    if (!title) return;
+
+    console.log('Searching for:', title);
+
+    fetch(`https://openlibrary.org/search.json?title=${title}`)
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data received:', data);
+
+            if (data.docs.length > 0) {
+                searchResults = data.docs;
+                const bookSelect = document.getElementById('bookSelect');
+                bookSelect.innerHTML = '<option value="">Select a book</option>';
+                data.docs.forEach((book, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.text = `${book.title} by ${book.author_name ? book.author_name.join(', ') : 'Unknown'} (${book.first_publish_year || 'Unknown'})`;
+                    bookSelect.appendChild(option);
+                });
+                document.getElementById('searchResults').style.display = 'block';
+                document.getElementById('bookDetails').style.display = 'none';
+            } else {
+                alert('No books found.');
+                document.getElementById('searchResults').style.display = 'none';
+                document.getElementById('bookDetails').style.display = 'none';
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
 
-    document.getElementById('searchTitle').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            searchBook();
-        }
-    });
+document.getElementById('searchTitle').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        searchBook();
+    }
+});
+
 
     function populateBookDetails() {
         const selectedIndex = document.getElementById('bookSelect').value;
@@ -140,6 +146,7 @@
             document.getElementById('bookDetails').style.display = 'none';
             return;
         }
+
         const book = searchResults[selectedIndex];
         document.getElementById('title').value = book.title;
         document.getElementById('author').value = book.author_name ? book.author_name.join(', ') : 'Unknown';
@@ -152,6 +159,7 @@
         } else {
             document.getElementById('coverImage').style.display = 'none';
         }
+
         document.getElementById('bookDetails').style.display = 'block';
     }
 
@@ -178,13 +186,14 @@
         if (!duplicateCheck) {
             checkDuplicate();
         } else {
-            submitForm();
+            addToLibrary(20);
         }
     });
 
     function checkDuplicate() {
         const title = document.getElementById('title').value;
         const author = document.getElementById('author').value;
+
         fetch('dupe_check.php', {
             method: 'POST',
             headers: {
@@ -197,7 +206,8 @@
             if (data.exists) {
                 document.getElementById('duplicateModal').style.display = 'block';
             } else {
-                submitForm();
+                addToLibrary(20);
+                // submitForm();
             }
         })
         .catch(error => console.error('Error:', error));
@@ -206,7 +216,8 @@
     function continueAdding() {
         duplicateCheck = true;
         document.getElementById('duplicateModal').style.display = 'none';
-        submitForm();
+        addToLibrary(20);
+        // submitForm();
     }
 
     function closeModal() {
@@ -240,7 +251,6 @@
                 console.log('Book added successfully!', data);
                 alert('Book added successfully!');
                 clearForm();
-                window.location.href = 'main_page.html'; // Redirect after successful submission
             }
         } catch (error) {
             console.error('Error adding book:', error.message);
@@ -258,6 +268,12 @@
         duplicateCheck = false; // reset dupe check
     }
 
+    document.getElementById('searchTitle').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            searchBook();
+        }
+    });
 </script>
 <script src="AddToLibrary.js" type="text/javascript"></script>
 </body>
