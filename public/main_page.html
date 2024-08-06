@@ -6,16 +6,36 @@
     <title>My Library - PagePal</title>
     <link rel="stylesheet" href="./static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script>
-        // Supabase client initialization - new version, did this load to heroku???
+</head>
+<body>
+
+<div class="main-container">
+    <div class="logo-container">
+        <button class="logout-button" onclick="logout()">Logout</button>
+        <img src="images/books_icon.png" alt="Logo" class="logo">
+        <span class="logo-text">PAGEPAL</span>
+    </div>
+    <h1>My Library</h1>
+
+    <div class="add-book-button-container">
+        <button class="add-book-button" onclick="window.location.href='add_to_library.html'">Add a Book</button>
+    </div>
+    <div id="book-feed" class="book-feed">
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        // Supabase client initialization
         const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         async function fetchBooks() {
-            const { data: { user }, error: userError } = await supabase.auth.getUser();
+            const userResponse = await supabase.auth.getUser();
+            const user = userResponse.data.user;
 
-            if (userError || !user) {
+            if (!user) {
                 alert('You must be logged in to view your library.');
                 window.location.href = 'index.html'; // Redirect to login page if not logged in
                 return;
@@ -90,26 +110,8 @@
             });
         }
 
-        // Fetch the books after the DOM is fully loaded
-        window.addEventListener('DOMContentLoaded', fetchBooks);
-    </script>
-</head>
-<body>
-
-<div class="main-container">
-    <div class="logo-container">
-        <button class="logout-button" onclick="logout()">Logout</button>
-        <img src="images/books_icon.png" alt="Logo" class="logo">
-        <span class="logo-text">PAGEPAL</span>
-    </div>
-    <h1>My Library</h1>
-
-    <div class="add-book-button-container">
-        <button class="add-book-button" onclick="window.location.href='add_to_library.html'">Add a Book</button>
-    </div>
-    <div id="book-feed" class="book-feed">
-    </div>
-</div>
-
+        fetchBooks(); // Fetch the books when the DOM is fully loaded
+    });
+</script>
 </body>
 </html>
