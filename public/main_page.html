@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Library - PagePal</title>
-    <!-- <link rel="stylesheet" href="../static/css/styles.css"> -->
-    <link rel="stylesheet" href="./static/css/styles.css"> 
+    <link rel="stylesheet" href="./static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
@@ -27,17 +26,18 @@
 
 <script>
 // Supabase client initialization
-// const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
-// const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
-// const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function fetchBooks() {
-    if (!supabase.auth.user()) {
+    const user = supabase.auth.user();
+    if (!user) {
         alert('You must be logged in to view your library.');
         return;
     }
 
-    const user_id = supabase.auth.user().id;
+    const user_id = user.id;
     const { data: books, error } = await supabase
         .from('user_books')
         .select('*')
@@ -54,6 +54,11 @@ async function fetchBooks() {
 function displayBooks(books) {
     const bookFeed = document.getElementById('book-feed');
     bookFeed.innerHTML = '';
+
+    if (books.length === 0) {
+        bookFeed.innerHTML = '<p>No books in your library yet.</p>';
+        return;
+    }
 
     books.forEach(book => {
         const bookItem = document.createElement('div');
