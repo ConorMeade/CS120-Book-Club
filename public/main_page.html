@@ -51,9 +51,7 @@
 //     displayBooks(books);
 // }
 
-let books = fetchBooks();
 
-displayBooks(books);
 
 function displayBooks(books) {
     const bookFeed = document.getElementById('book-feed');
@@ -92,6 +90,11 @@ function renderStars(rating) {
     return stars;
 }
 
+let books = getUserBooks();
+console.log(books)
+
+displayBooks(books);
+
 // fetchBooks();
 
 function logout() {
@@ -100,6 +103,6 @@ function logout() {
     });
 }
 </script>
-<script src="FetchBooks.js" type="text/javascript"></script>
+<script src="fetchBooks.js" type="text/javascript"></script>
 </body>
 </html>
