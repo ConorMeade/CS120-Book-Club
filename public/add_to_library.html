@@ -6,6 +6,178 @@
     <title>Add a Book</title>
     <link rel="stylesheet" href="./static/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        // Supabase client initialization
+        const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        let searchResults = []; // Initialize searchResults here
+
+        // Function to search for a book
+        function searchBook() {
+            const title = document.getElementById('searchTitle').value;
+            if (!title) return;
+            console.log('Searching for:', title);
+            fetch(`https://openlibrary.org/search.json?title=${title}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.docs.length > 0) {
+                        searchResults = data.docs;
+                        const bookSelect = document.getElementById('bookSelect');
+                        bookSelect.innerHTML = '<option value="">Select a book</option>';
+                        data.docs.forEach((book, index) => {
+                            const option = document.createElement('option');
+                            option.value = index;
+                            option.text = `${book.title} by ${book.author_name ? book.author_name.join(', ') : 'Unknown'} (${book.first_publish_year || 'Unknown'})`;
+                            bookSelect.appendChild(option);
+                        });
+                        document.getElementById('searchResults').style.display = 'block';
+                        document.getElementById('bookDetails').style.display = 'none';
+                    } else {
+                        alert('No books found.');
+                        document.getElementById('searchResults').style.display = 'none';
+                        document.getElementById('bookDetails').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Event listener to trigger search on Enter key
+        document.getElementById('searchTitle').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                searchBook();
+            }
+        });
+
+        function populateBookDetails() {
+            const selectedIndex = document.getElementById('bookSelect').value;
+            if (selectedIndex === "") {
+                clearBookDetails();
+                document.getElementById('bookDetails').style.display = 'none';
+                return;
+            }
+            const book = searchResults[selectedIndex];
+            document.getElementById('title').value = book.title;
+            document.getElementById('author').value = book.author_name ? book.author_name.join(', ') : 'Unknown';
+            document.getElementById('pages').value = book.number_of_pages_median || 'Unknown';
+            document.getElementById('summary').value = book.first_sentence ? book.first_sentence[0] : 'No summary available';
+            document.getElementById('cover').value = book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : '';
+            if (book.cover_i) {
+                document.getElementById('coverImage').src = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
+                document.getElementById('coverImage').style.display = 'block';
+            } else {
+                document.getElementById('coverImage').style.display = 'none';
+            }
+            document.getElementById('bookDetails').style.display = 'block';
+        }
+
+        function clearBookDetails() {
+            document.getElementById('title').value = '';
+            document.getElementById('author').value = '';
+            document.getElementById('pages').value = '';
+            document.getElementById('summary').value = '';
+            document.getElementById('cover').value = '';
+            document.getElementById('coverImage').style.display = 'none';
+        }
+
+        function toggleRating() {
+            const status = document.getElementById('status').value;
+            if (status === 'completed') {
+                document.getElementById('ratingDiv').style.display = 'block';
+            } else {
+                document.getElementById('ratingDiv').style.display = 'none';
+            }
+        }
+
+        document.getElementById('bookForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            console.log("Form submission intercepted.");
+            if (!duplicateCheck) {
+                checkDuplicate();
+            } else {
+                submitForm();
+            }
+        });
+
+        function checkDuplicate() {
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            fetch('dupe_check.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    document.getElementById('duplicateModal').style.display = 'block';
+                } else {
+                    submitForm();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function continueAdding() {
+            duplicateCheck = true;
+            document.getElementById('duplicateModal').style.display = 'none';
+            submitForm();
+        }
+
+        function closeModal() {
+            document.getElementById('duplicateModal').style.display = 'none';
+        }
+
+        async function submitForm() {
+            if (!supabase.auth.user()) {
+                alert('You must be logged in to add books to your library.');
+                return;
+            }
+            const formData = new FormData(document.getElementById('bookForm'));
+            const title = formData.get('title');
+            const author = formData.get('author');
+            const cover = formData.get('cover');
+            const pages = formData.get('pages');
+            const summary = formData.get('summary');
+            const status = formData.get('status');
+            const rating = formData.get('rating') || null;
+
+            try {
+                const { data, error } = await supabase
+                    .from('user_books')
+                    .insert([
+                        { title, author, cover, pages, summary, status, rating, user_id: supabase.auth.user().id }
+                    ]);
+
+                if (error) {
+                    throw error;
+                } else {
+                    console.log('Book added successfully!', data);
+                    alert('Book added successfully!');
+                    clearForm();
+                    window.location.href = 'main_page.html'; // Redirect after successful submission
+                }
+            } catch (error) {
+                console.error('Error adding book:', error.message);
+                alert('Failed to add book. Please try again.');
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('searchTitle').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+            clearBookDetails();
+            document.getElementById('bookDetails').style.display = 'none';
+            document.getElementById('status').value = 'want-to-read';
+            toggleRating();
+            duplicateCheck = false; // reset dupe check
+        }
+
+    </script>
 </head>
 <body>
 
@@ -15,7 +187,7 @@
         <span class="logo-text">PAGEPAL</span>
     </div>
     <h1>Add a Book</h1>
-    <form id="bookForm" method="POST">
+    <form id="bookForm"  method="POST">
         <div>
             <label for="searchTitle">Book Title:</label>
             <input type="text" id="searchTitle" name="searchTitle" required>
@@ -80,179 +252,12 @@
     </form>
 </div>
 
+<!-- Duplicate modal -->
 <div id="duplicateModal" style="display:none;">
     <p>This book is already in your library, are you sure you want to continue adding?</p>
     <button onclick="continueAdding()">Continue Adding</button>
     <button onclick="closeModal()">Go Back</button>
 </div>
 
-<script>
-    const supabaseUrl = 'https://ojygetcgjabzpxbmdaax.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qeWdldGNnamFienB4Ym1kYWF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjEzNDUyNzEsImV4cCI6MjAzNjkyMTI3MX0.K7M16UbjRvJ7YLf7YcTgEdmCbXz5rq1_jV8ERNUqxFA';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-    let searchResults = [];
-    let duplicateCheck = true;
-
-    function searchBook() {
-        const title = document.getElementById('searchTitle').value;
-        if (!title) return;
-        fetch(`https://openlibrary.org/search.json?title=${title}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.docs.length > 0) {
-                    searchResults = data.docs;
-                    const bookSelect = document.getElementById('bookSelect');
-                    bookSelect.innerHTML = '<option value="">Select a book</option>';
-                    data.docs.forEach((book, index) => {
-                        const option = document.createElement('option');
-                        option.value = index;
-                        option.text = `${book.title} by ${book.author_name ? book.author_name.join(', ') : 'Unknown'} (${book.first_publish_year || 'Unknown'})`;
-                        bookSelect.appendChild(option);
-                    });
-                    document.getElementById('searchResults').style.display = 'block';
-                    document.getElementById('bookDetails').style.display = 'none';
-                } else {
-                    alert('No books found.');
-                    document.getElementById('searchResults').style.display = 'none';
-                    document.getElementById('bookDetails').style.display = 'none';
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    document.getElementById('searchTitle').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            searchBook();
-        }
-    });
-
-    function populateBookDetails() {
-        const selectedIndex = document.getElementById('bookSelect').value;
-        if (selectedIndex === "") {
-            clearBookDetails();
-            document.getElementById('bookDetails').style.display = 'none';
-            return;
-        }
-        const book = searchResults[selectedIndex];
-        document.getElementById('title').value = book.title;
-        document.getElementById('author').value = book.author_name ? book.author_name.join(', ') : 'Unknown';
-        document.getElementById('pages').value = book.number_of_pages_median || 'Unknown';
-        document.getElementById('summary').value = book.first_sentence ? book.first_sentence[0] : 'No summary available';
-        document.getElementById('cover').value = book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : '';
-        if (book.cover_i) {
-            document.getElementById('coverImage').src = `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`;
-            document.getElementById('coverImage').style.display = 'block';
-        } else {
-            document.getElementById('coverImage').style.display = 'none';
-        }
-        document.getElementById('bookDetails').style.display = 'block';
-    }
-
-    function clearBookDetails() {
-        document.getElementById('title').value = '';
-        document.getElementById('author').value = '';
-        document.getElementById('pages').value = '';
-        document.getElementById('summary').value = '';
-        document.getElementById('cover').value = '';
-        document.getElementById('coverImage').style.display = 'none';
-    }
-
-    function toggleRating() {
-        const status = document.getElementById('status').value;
-        if (status === 'completed') {
-            document.getElementById('ratingDiv').style.display = 'block';
-        } else {
-            document.getElementById('ratingDiv').style.display = 'none';
-        }
-    }
-
-    document.getElementById('bookForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        if (!duplicateCheck) {
-            checkDuplicate();
-        } else {
-            submitForm();
-        }
-    });
-
-    function checkDuplicate() {
-        const title = document.getElementById('title').value;
-        const author = document.getElementById('author').value;
-        fetch('dupe_check.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}`,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.exists) {
-                document.getElementById('duplicateModal').style.display = 'block';
-            } else {
-                submitForm();
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function continueAdding() {
-        duplicateCheck = true;
-        document.getElementById('duplicateModal').style.display = 'none';
-        submitForm();
-    }
-
-    function closeModal() {
-        document.getElementById('duplicateModal').style.display = 'none';
-    }
-
-    async function submitForm() {
-        if (!supabase.auth.user()) {
-            alert('You must be logged in to add books to your library.');
-            return;
-        }
-        const formData = new FormData(document.getElementById('bookForm'));
-        const title = formData.get('title');
-        const author = formData.get('author');
-        const cover = formData.get('cover');
-        const pages = formData.get('pages');
-        const summary = formData.get('summary');
-        const status = formData.get('status');
-        const rating = formData.get('rating') || null;
-
-        try {
-            const { data, error } = await supabase
-                .from('user_books')
-                .insert([
-                    { title, author, cover, pages, summary, status, rating, user_id: supabase.auth.user().id }
-                ]);
-
-            if (error) {
-                throw error;
-            } else {
-                console.log('Book added successfully!', data);
-                alert('Book added successfully!');
-                clearForm();
-                window.location.href = 'main_page.html'; // Redirect after successful submission
-            }
-        } catch (error) {
-            console.error('Error adding book:', error.message);
-            alert('Failed to add book. Please try again.');
-        }
-    }
-
-    function clearForm() {
-        document.getElementById('searchTitle').value = '';
-        document.getElementById('searchResults').style.display = 'none';
-        clearBookDetails();
-        document.getElementById('bookDetails').style.display = 'none';
-        document.getElementById('status').value = 'want-to-read';
-        toggleRating();
-        duplicateCheck = false; // reset dupe check
-    }
-
-</script>
 </body>
 </html>
