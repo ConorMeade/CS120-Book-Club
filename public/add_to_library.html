@@ -185,33 +185,35 @@ document.getElementById('searchTitle').addEventListener('keydown', function(even
     }
 
     document.getElementById('bookForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
+    event.preventDefault();
 
-        const formData = new FormData(document.getElementById('bookForm'));
-        const formObject = Object.fromEntries(formData.entries());
+    const formData = new FormData(document.getElementById('bookForm'));
+    const formObject = Object.fromEntries(formData.entries());
 
-        try {
-            const response = await fetch('addToLibrary.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formObject),
-            });
+    try {
+        const response = await fetch('addToLibrary.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formObject),
+        });
 
-            const result = await response.json();
+        const result = await response.json();
+        console.log('Server response:', result);
 
-            if (result.status === 'success') {
-                alert('Book added successfully!');
-                redirectToMainPage();
-            } else {
-                alert('Failed to add book: ' + result.message);
-            }
-        } catch (error) {
-            console.error('Error adding book:', error);
-            alert('Failed to add book. Please try again.');
+        if (result.status === 'success') {
+            console.log('Book added successfully, redirecting to main_page.html');
+            window.location.href = 'https://infinite-beyond-05850-58f77000e905.herokuapp.com/main_page.html';
+        } else {
+            console.error('Failed to add book:', result.message);
+            alert('Failed to add book: ' + result.message);
         }
-    });
+    } catch (error) {
+        console.error('Error adding book:', error);
+        alert('Failed to add book. Please try again.');
+    }
+});
 
 
     function checkDuplicate() {
